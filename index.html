@@ -1,12 +1,293 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f8f4eb"><title>The Book Loop | Read · Love · Swap · Repeat</title><link rel="stylesheet" href="styles.css"></head><body>
-<header><a class="brand" href="#home"><img src="images/logo/book-loop-logo.png" alt="" onerror="this.style.display='none'"> <span>The Book Loop</span></a></header>
-<nav class="sticky-nav" aria-label="Main navigation"><div class="nav-track"><a href="#library">Books</a><a href="#submit">Share</a><a href="#community">Community</a><a href="#instagram">Instagram</a><a href="#admin" id="adminNav" hidden>Parent admin</a></div></nav>
-<main><section class="hero" id="home"><p class="eyebrow">READ · LOVE · SWAP · REPEAT</p><h1>Every book deserves <em>another chapter.</em></h1><p>Find a story to love. Pass along a book you've finished. Keep the reading magic going.</p><a class="button" href="#library">Explore the bookshelf</a></section>
-<section class="wrap"><div class="auth"><div id="loggedOut"><h2>Join the loop</h2><p>Use an adult-supervised email account. A sign-in link will be emailed to you.</p><form id="loginForm"><label>Email address<input name="email" type="email" required autocomplete="email"></label><button>Send sign-in link</button></form></div><div id="loggedIn" hidden><p>Signed in as <strong id="email"></strong> <button id="logout" type="button" class="subtle">Sign out</button></p></div><p id="authMsg" role="status"></p></div></section>
-<section class="wrap" id="library"><p class="eyebrow">THE COMMUNITY BOOKSHELF</p><h2>Find your next page-turner</h2><input id="search" placeholder="Search title or author" aria-label="Search books"><div id="books" class="grid"></div><p id="booksMsg" role="status"></p></section>
-<section class="wrap tinted" id="submit"><p class="eyebrow">GIVE A STORY A NEW HOME</p><h2>Put a book in the loop</h2><p>Sign in to submit a book. A parent reviews it before it appears publicly. Only bring books to the supervised collection point after approval.</p><form id="bookForm" class="panel"><label>Book title<input name="title" required maxlength="120"></label><label>Author<input name="author" required maxlength="120"></label><label>Genre<select name="genre" required><option>Fantasy</option><option>Romance</option><option>Mystery</option><option>Classics</option><option>Adventure</option><option>Other</option></select></label><label>Condition<select name="condition" required><option>Like new</option><option>Good</option><option>Well loved</option></select></label><label>Cover photo (JPEG, PNG or WebP, maximum 5 MB)<input name="cover" type="file" accept="image/jpeg,image/png,image/webp"></label><label>About the book<textarea name="description" maxlength="500" rows="3"></textarea></label><button>Submit for parent approval</button><p id="bookMsg" role="status"></p></form></section>
-<section class="wrap" id="community"><p class="eyebrow">BETWEEN THE PAGES</p><h2>Readers' corner</h2><div id="reviews" class="grid"></div><h3>Share a review</h3><form id="reviewForm" class="panel"><label>Book title<input name="title" required maxlength="120"></label><label>Rating<select name="rating"><option value="5">★★★★★</option><option value="4">★★★★☆</option><option value="3">★★★☆☆</option><option value="2">★★☆☆☆</option><option value="1">★☆☆☆☆</option></select></label><label>Your review<textarea name="review" required maxlength="500" rows="4"></textarea></label><button>Submit review for approval</button><p id="reviewMsg" role="status"></p></form></section>
-<section class="wrap insta" id="instagram"><p class="eyebrow">BOOKSTAGRAM</p><h2>Follow our reading adventures ♡</h2><p>Our Instagram feed is coming soon. For now, follow the club for reading inspiration and new arrivals.</p><a id="instagramLink" class="button" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Find us on Instagram ↗</a></section>
-<section class="wrap" id="admin" hidden><p class="eyebrow">PARENT ONLY</p><h2>Moderation dashboard</h2><p>Only an adult account added to the database's <code>admins</code> table can review requests.</p><h3>Pending books</h3><div id="pendingBooks"></div><h3>Pending reviews</h3><div id="pendingReviews"></div><h3>Swap requests</h3><div id="pendingSwaps"></div><p id="adminMsg" role="status"></p></section>
-<section class="wrap"><p class="notice">Safety first: No public profiles, private messaging, home addresses or member contact details. Swaps must be arranged by an adult at a supervised collection point. Swap credits and automated booking are not yet enabled.</p></section></main><footer>The Book Loop · Read. Love. Swap. Repeat. ♡</footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="config.js"></script><script src="app.js"></script></body></html>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8f4eb">
+  <title>The Book Loop | Read · Love · Swap · Repeat</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a class="brand" href="#home">
+    <img
+      src="images/logo/book-loop-logo.png"
+      alt="The Book Loop logo"
+      onerror="this.style.display='none'"
+    >
+    <span>The Book Loop</span>
+  </a>
+</header>
+
+<nav class="sticky-nav" aria-label="Main navigation">
+  <div class="nav-track">
+    <a href="#library">Books</a>
+    <a href="#submit">Share</a>
+    <a href="#community">Community</a>
+    <a href="#instagram">Instagram</a>
+    <a href="#admin" id="adminNav" hidden>Parent admin</a>
+  </div>
+</nav>
+
+<main>
+
+  <section class="hero" id="home">
+    <p class="eyebrow">READ · LOVE · SWAP · REPEAT</p>
+    <h1>Every book deserves <em>another chapter.</em></h1>
+    <p>
+      Find a story to love. Pass along a book you've finished.
+      Keep the reading magic going.
+    </p>
+    <a class="button" href="#library">Explore the bookshelf</a>
+  </section>
+
+  <section class="wrap">
+    <div class="auth">
+      <div id="loggedOut">
+        <h2>Join the loop</h2>
+        <p>
+          Use an adult-supervised email account.
+          A sign-in link will be emailed to you.
+        </p>
+        <form id="loginForm">
+          <label>
+            Email address
+            <input
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+            >
+          </label>
+          <button>Send sign-in link</button>
+        </form>
+      </div>
+
+      <div id="loggedIn" hidden>
+        <p>
+          Signed in as <strong id="email"></strong>
+          <button id="logout" type="button" class="subtle">
+            Sign out
+          </button>
+        </p>
+      </div>
+
+      <p id="authMsg" role="status"></p>
+    </div>
+  </section>
+
+  <section class="wrap" id="library">
+    <p class="eyebrow">THE COMMUNITY BOOKSHELF</p>
+    <h2>Find your next page-turner</h2>
+
+    <input
+      id="search"
+      placeholder="Search title or author"
+      aria-label="Search books"
+    >
+
+    <div id="books" class="grid"></div>
+    <p id="booksMsg" role="status"></p>
+  </section>
+
+  <section class="wrap tinted" id="submit">
+    <p class="eyebrow">GIVE A STORY A NEW HOME</p>
+    <h2>Put a book in the loop</h2>
+
+    <p>
+      Sign in to submit a book. A parent reviews it before it
+      appears publicly. Only bring books to the supervised
+      collection point after approval.
+    </p>
+
+    <form id="bookForm" class="panel">
+
+      <label>
+        Book title
+        <input name="title" required maxlength="120">
+      </label>
+
+      <label>
+        Author
+        <input name="author" required maxlength="120">
+      </label>
+
+      <label>
+        Genre
+        <select name="genre" required>
+          <option value="" selected disabled>Select a genre</option>
+          <option>Action &amp; Adventure</option>
+          <option>Art &amp; Photography</option>
+          <option>Autobiography</option>
+          <option>Biography</option>
+          <option>Business &amp; Finance</option>
+          <option>Children's Fiction</option>
+          <option>Children's Non-Fiction</option>
+          <option>Classics</option>
+          <option>Comics</option>
+          <option>Contemporary Fiction</option>
+          <option>Cookbooks &amp; Food</option>
+          <option>Crime</option>
+          <option>Dark Romance</option>
+          <option>Dystopian</option>
+          <option>Education &amp; Study</option>
+          <option>Fantasy</option>
+          <option>Graphic Novels</option>
+          <option>Historical Fiction</option>
+          <option>History</option>
+          <option>Horror</option>
+          <option>Humour</option>
+          <option>Literary Fiction</option>
+          <option>Manga</option>
+          <option>Memoir</option>
+          <option>Mystery</option>
+          <option>Non-Fiction</option>
+          <option>Other</option>
+          <option>Poetry</option>
+          <option>Religion &amp; Spirituality</option>
+          <option>Romance</option>
+          <option>Science &amp; Nature</option>
+          <option>Science Fiction</option>
+          <option>Self-Help &amp; Personal Growth</option>
+          <option>Sports</option>
+          <option>Thriller</option>
+          <option>Young Adult</option>
+        </select>
+      </label>
+
+      <label>
+        Condition
+        <select name="condition" required>
+          <option>Like new</option>
+          <option>Good</option>
+          <option>Well loved</option>
+        </select>
+      </label>
+
+      <label>
+        Cover photo (JPEG, PNG or WebP, maximum 5 MB)
+        <input
+          name="cover"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+        >
+      </label>
+
+      <label>
+        About the book
+        <textarea
+          name="description"
+          maxlength="500"
+          rows="3"
+        ></textarea>
+      </label>
+
+      <button>Submit for parent approval</button>
+      <p id="bookMsg" role="status"></p>
+    </form>
+  </section>
+
+  <section class="wrap" id="community">
+    <p class="eyebrow">BETWEEN THE PAGES</p>
+    <h2>Readers' corner</h2>
+
+    <div id="reviews" class="grid"></div>
+
+    <h3>Share a review</h3>
+
+    <form id="reviewForm" class="panel">
+      <label>
+        Book title
+        <input name="title" required maxlength="120">
+      </label>
+
+      <label>
+        Rating
+        <select name="rating">
+          <option value="5">★★★★★</option>
+          <option value="4">★★★★☆</option>
+          <option value="3">★★★☆☆</option>
+          <option value="2">★★☆☆☆</option>
+          <option value="1">★☆☆☆☆</option>
+        </select>
+      </label>
+
+      <label>
+        Your review
+        <textarea
+          name="review"
+          required
+          maxlength="500"
+          rows="4"
+        ></textarea>
+      </label>
+
+      <button>Submit review for approval</button>
+      <p id="reviewMsg" role="status"></p>
+    </form>
+  </section>
+
+  <section class="wrap insta" id="instagram">
+    <p class="eyebrow">BOOKSTAGRAM</p>
+    <h2>Follow our reading adventures ♡</h2>
+
+    <p>
+      Our Instagram feed is coming soon. For now, follow the
+      club for reading inspiration and new arrivals.
+    </p>
+
+    <a
+      id="instagramLink"
+      class="button"
+      href="https://www.instagram.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Find us on Instagram
+    </a>
+  </section>
+
+  <section class="wrap" id="admin" hidden>
+    <p class="eyebrow">PARENT ONLY</p>
+    <h2>Moderation dashboard</h2>
+
+    <p>
+      Only an adult account added to the database's
+      <code>admins</code> table can review requests.
+    </p>
+
+    <h3>Pending books</h3>
+    <div id="pendingBooks"></div>
+
+    <h3>Pending reviews</h3>
+    <div id="pendingReviews"></div>
+
+    <h3>Swap requests</h3>
+    <div id="pendingSwaps"></div>
+
+    <p id="adminMsg" role="status"></p>
+  </section>
+
+  <section class="wrap">
+    <p class="notice">
+      Safety first: No public profiles, private messaging,
+      home addresses or member contact details. Swaps must
+      be arranged by an adult at a supervised collection point.
+      Swap credits and automated booking are not yet enabled.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  The Book Loop · Read. Love. Swap. Repeat. ♡
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
